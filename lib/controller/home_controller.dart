@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:green_leaf_app/Service/remote_service/remote_food_service.dart';
-import 'package:green_leaf_app/models/addFoods.dart';
+import 'package:green_leaf_app/models/foods_model.dart';
+import 'package:green_leaf_app/services/remote_service/remote_food_service.dart';
 
 class HomeController extends GetxController {
   static HomeController instance = Get.find();
@@ -21,7 +21,7 @@ class HomeController extends GetxController {
       var result = await RemoteFoodService().get();
 
       if (result != null) {
-        foodList.assignAll(FoodListFromJson(result.body));
+        foodList.assignAll(foodListFromJson(result.body));
       }
     } finally {
       print("There are ${foodList.length} food items");

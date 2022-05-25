@@ -1,4 +1,5 @@
 import 'package:green_leaf_app/const.dart';
+import 'package:green_leaf_app/models/foods_model.dart';
 import 'package:http/http.dart' as http;
 
 class RemoteFoodService {

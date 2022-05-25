@@ -1,19 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:green_leaf_app/HomeScreen.dart';
+import 'package:green_leaf_app/controller/cartController.dart';
 import 'package:tbib_splash_screen/splash_screen_view.dart';
 
 void main() {
-  runApp(const HomePage());
+  runApp(HomePage());
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final cartController = Get.put(CartController());
+  HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Green Leaf',
       home: SplashScreen(),

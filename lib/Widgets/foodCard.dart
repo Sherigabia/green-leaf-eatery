@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:green_leaf_app/cartPage.dart';
+import 'package:green_leaf_app/controller/cartController.dart';
+import 'package:green_leaf_app/favourites.dart';
+import 'package:green_leaf_app/models/foods_model.dart';
 
 class FoodCard extends StatelessWidget {
+  final cartController = Get.put(CartController());
+  final int index;
   String foodname;
   String description;
   String image;
@@ -8,6 +15,7 @@ class FoodCard extends StatelessWidget {
 
   FoodCard(
       {Key? key,
+      required this.index,
       required this.foodname,
       required this.description,
       required this.image,
@@ -71,17 +79,23 @@ class FoodCard extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      Icon(
-                        Icons.shopping_cart_outlined,
+                      IconButton(
+                        onPressed: () {
+/* fix cart feature bug here*/
+                          cartController.addFood(Food.allmeals[index]);
+                        },
+                        tooltip: "add to cart",
+                        icon: Icon(Icons.shopping_cart_outlined),
                         color: Colors.grey,
                       ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Icon(
-                        Icons.favorite_outline,
+                      IconButton(
+                        onPressed: () {},
+                        tooltip: "add to favourites",
+                        icon: Icon(
+                          Icons.favorite_outline,
+                        ),
                         color: Colors.grey,
-                      )
+                      ),
                     ],
                   ),
                 ],

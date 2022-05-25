@@ -1,15 +1,12 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:green_leaf_app/Widgets/featuredFoodCard.dart';
 import 'package:green_leaf_app/allMeals.dart';
 import 'package:green_leaf_app/cartPage.dart';
-import 'package:green_leaf_app/controller/controllers.dart';
-import 'package:green_leaf_app/controller/home_controller.dart';
+import 'package:green_leaf_app/controller/cartController.dart';
 import 'package:green_leaf_app/favourites.dart';
 import 'package:green_leaf_app/mealPage.dart';
-import 'package:green_leaf_app/view/home/components/foodLoading.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -19,6 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final CartController controller = Get.find();
+
   final featuredfood = [
     {
       'name': 'Pizza',
@@ -60,7 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(HomeController());
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -76,21 +74,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: Row(
                     children: [
-                      Badge(
-                        badgeContent:
-                            Text("3", style: TextStyle(color: Colors.white)),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black.withOpacity(0.4),
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => CartPage()));
-                            },
-                            icon: Icon(Icons.shopping_cart),
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      Obx(() => Badge(
+                            badgeContent: Text(
+                              '${controller.foods.length}',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black.withOpacity(0.4),
+                              child: IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => CartPage()));
+                                },
+                                icon: Icon(Icons.shopping_cart),
+                                color: Colors.white,
+                              ),
+                            ),
+                          )),
                       const SizedBox(
                         width: 10,
                       ),
@@ -301,29 +301,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
-                          Obx(() {
-                            if (homeController.isFoodLoading.value) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => MealPage(
-                                          foodname:
-                                              "${featuredfood[index]['name']}",
-                                          description: "",
-                                          image:
-                                              "${featuredfood[index]['img']}",
-                                          price: "")));
-                                },
-                                child: FeaturedCard(
-                                  name: "${featuredfood[index]['name']}",
-                                  onTopRightButtonClicked: () {},
-                                  imgUrl: "${featuredfood[index]['img']}",
-                                ),
-                              );
-                            } else {
-                              return FoodLoading();
-                            }
-                          })
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => MealPage(
+                                      foodname:
+                                          "${featuredfood[index]['name']}",
+                                      description: "",
+                                      image: "${featuredfood[index]['img']}",
+                                      price: "")));
+                            },
+                            child: FeaturedCard(
+                              name: "${featuredfood[index]['name']}",
+                              imgUrl: "${featuredfood[index]['img']}",
+                            ),
+                          )
                         ],
                       );
                     },

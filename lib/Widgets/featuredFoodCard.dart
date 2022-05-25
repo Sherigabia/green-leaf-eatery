@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class FeaturedCard extends StatelessWidget {
-  final Function onTopRightButtonClicked;
   final Gradient backgroundGradient;
   final String name;
   final String imgUrl;
@@ -9,7 +8,6 @@ class FeaturedCard extends StatelessWidget {
     Key? key,
     required this.name,
     required this.imgUrl,
-    required this.onTopRightButtonClicked,
     this.backgroundGradient =
         const LinearGradient(colors: [Colors.black87, Colors.black54]),
   }) : super(key: key);
@@ -58,9 +56,7 @@ class FeaturedCard extends StatelessWidget {
                   color: Colors.white,
                   size: 30,
                 ),
-                onPressed: () {
-                  onTopRightButtonClicked();
-                },
+                onPressed: () {},
               ),
             ),
           ),

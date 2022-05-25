@@ -1,8 +1,12 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:green_leaf_app/Widgets/foodCard.dart';
 import 'package:green_leaf_app/Widgets/searchInput.dart';
 import 'package:green_leaf_app/cartPage.dart';
+import 'package:green_leaf_app/controller/cartController.dart';
 import 'package:green_leaf_app/favourites.dart';
+import 'package:green_leaf_app/models/foods_model.dart';
 
 class AllMealsPage extends StatefulWidget {
   const AllMealsPage({Key? key}) : super(key: key);
@@ -12,80 +16,37 @@ class AllMealsPage extends StatefulWidget {
 }
 
 class _AllMealsPageState extends State<AllMealsPage> {
-  final allmeals = [
-    {
-      'foodname': 'Pizza',
-      'img': "assets/images/pizza.jpg",
-      'description': "Peperroni Pizza",
-      'price': "GH₵ 25"
-    },
-    {
-      'foodname': 'Banku',
-      'img': "assets/images/banku-tilapia.jpeg",
-      'description': "Banku with Grilled Tilapia",
-      'price': "GH₵ 30"
-    },
-    {
-      'foodname': 'Noodles',
-      'img': "assets/images/noodles.jpg",
-      'description': "Spicy Noodles with Chicken",
-      'price': "GH₵ 20"
-    },
-    {
-      'foodname': 'Pizza',
-      'img': "assets/images/pizza.jpg",
-      'description': "Peperroni Pizza",
-      'price': "GH₵ 25"
-    },
-    {
-      'foodname': 'Banku',
-      'img': "assets/images/banku-tilapia.jpeg",
-      'description': "Banku with Grilled Tilapia",
-      'price': "GH₵ 30"
-    },
-    {
-      'foodname': 'Noodles',
-      'img': "assets/images/noodles.jpg",
-      'description': "Spicy Noodles with Chicken",
-      'price': "GH₵ 20"
-    },
-    {
-      'foodname': 'Pizza',
-      'img': "assets/images/pizza.jpg",
-      'description': "Peperroni Pizza",
-      'price': "GH₵ 25"
-    },
-    {
-      'foodname': 'Banku',
-      'img': "assets/images/banku-tilapia.jpeg",
-      'description': "Banku with Grilled Tilapia",
-      'price': "GH₵ 30"
-    },
-    {
-      'foodname': 'Noodles',
-      'img': "assets/images/noodles.jpg",
-      'description': "Spicy Noodles with Chicken",
-      'price': "GH₵ 20"
-    },
-    {
-      'foodname': 'Pizza',
-      'img': "assets/images/pizza.jpg",
-      'description': "Peperroni Pizza",
-      'price': "GH₵ 25"
-    },
-    {
-      'foodname': 'Banku',
-      'img': "assets/images/banku-tilapia.jpeg",
-      'description': "Banku with Grilled Tilapia",
-      'price': "GH₵ 30"
-    },
-    {
-      'foodname': 'Noodles',
-      'img': "assets/images/noodles.jpg",
-      'description': "Spicy Noodles with Chicken",
-      'price': "GH₵ 20"
-    },
-  ];
+  final CartController controller = Get.find();
+
+  // This list holds the data for the list view
+  List<Food> foundMeals = [];
+
+  @override
+  void initState() {
+    foundMeals = Food.allmeals;
+    super.initState();
+  }
+
+  // This function is called whenever the text field changes
+  void _runFilter(String enteredKeyword) {
+    List<Food> results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = Food.allmeals;
+    } else {
+      results = Food.allmeals
+          .where((food) => food.foodname
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      foundMeals = results;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,44 +57,53 @@ class _AllMealsPageState extends State<AllMealsPage> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.black.withOpacity(0.4),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => CartPage()));
-                    },
-                    icon: Icon(Icons.shopping_cart),
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                CircleAvatar(
-                  backgroundColor: Colors.black.withOpacity(0.4),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FavouritesPage()));
-                    },
-                    icon: Icon(Icons.favorite),
-                    color: Colors.white,
-                  ),
-                )
-              ],
-            ),
+            child: Obx(() => Row(
+                  children: [
+                    Badge(
+                      badgeContent: Text(
+                        '${controller.foods.length}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.black.withOpacity(0.4),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => CartPage()));
+                          },
+                          icon: Icon(Icons.shopping_cart),
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.black.withOpacity(0.4),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => FavouritesPage()));
+                        },
+                        icon: Icon(Icons.favorite),
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                )),
           )
         ],
         bottom: PreferredSize(
-            child: Column(children: const [
+            child: Column(children: [
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: RoundedSearchInput(hintText: 'Search food')),
+                    padding: const EdgeInsets.all(8.0),
+                    child: RoundedSearchInput(
+                      hintText: 'Search food',
+                      OnchangeText: (value) => _runFilter(value),
+                    )),
               ),
             ]),
             preferredSize: Size.fromHeight(70)),
@@ -153,24 +123,30 @@ class _AllMealsPageState extends State<AllMealsPage> {
                     fontWeight: FontWeight.w600,
                     color: Colors.black)),
             Expanded(
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        FoodCard(
-                          description: "${allmeals[index]['description']}",
-                          foodname: "${allmeals[index]['foodname']}",
-                          price: '${allmeals[index]['price']}',
-                          image: '${allmeals[index]['img']}',
-                        )
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox();
-                  },
-                  itemCount: allmeals.length),
+              child: foundMeals.isNotEmpty
+                  ? ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            FoodCard(
+                              index: index,
+                              description: "${foundMeals[index].description}",
+                              foodname: "${foundMeals[index].foodname}",
+                              price: 'GH₵ ${foundMeals[index].price}',
+                              image: '${foundMeals[index].img}',
+                            )
+                          ],
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox();
+                      },
+                      itemCount: foundMeals.length)
+                  : const Text(
+                      'No results found',
+                      style: TextStyle(fontSize: 24),
+                    ),
             )
           ],
         ),

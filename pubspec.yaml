@@ -39,6 +39,7 @@ dependencies:
   badges: ^2.0.2
   http: ^0.13.4
   shimmer: ^2.0.0
+  cached_network_image: ^3.2.0
 
 dev_dependencies:
   flutter_test:

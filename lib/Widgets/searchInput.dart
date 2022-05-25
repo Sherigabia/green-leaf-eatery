@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class RoundedSearchInput extends StatelessWidget {
   final String hintText;
-  const RoundedSearchInput({required this.hintText, Key? key})
+  final  OnchangeText;
+  const RoundedSearchInput(
+      {required this.hintText, required this.OnchangeText, Key? key})
       : super(key: key);
 
   @override
@@ -20,9 +22,7 @@ class RoundedSearchInput extends StatelessWidget {
               color: Colors.grey.withOpacity(.1)),
         ]),
         child: TextField(
-          onChanged: (value) {
-            //Do something wi
-          },
+          onChanged: OnchangeText,
           decoration: InputDecoration(
             prefixIcon: Icon(
               Icons.search,
