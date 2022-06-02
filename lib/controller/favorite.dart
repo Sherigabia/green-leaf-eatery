@@ -1,20 +1,21 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:green_leaf_app/models/foods_model.dart';
 
-class CartController extends GetxController {
-  // Dictionary to store the products
+class FavoriteController extends GetxController{
+    // Dictionary to store the products
   var _foods = {}.obs;
 
+  
   // add Food function
-  addFood(food) {
+   addFood( food) {
     if (_foods.containsKey(food)) {
       _foods[food] += 1;
     } else {
       _foods[food] = 1;
     }
 
-    Get.snackbar("Food Added", "You have added ${food.foodname} to Cart",
+    Get.snackbar("${food.foodname}", " ${food.foodname} saved for later",
         isDismissible: true,
         dismissDirection: DismissDirection.horizontal,
         snackPosition: SnackPosition.BOTTOM,
@@ -36,12 +37,4 @@ class CartController extends GetxController {
 
   get foods => _foods;
 
-  get foodSubtotal =>
-      _foods.entries.map((food) => food.key.price * food.value).toList().obs;
-
-  get total => _foods.entries
-      .map((food) => food.key.price * food.value)
-      .toList()
-      .reduce((value, element) => value + element)
-      .toStringAsFixed(2);
 }

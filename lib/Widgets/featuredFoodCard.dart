@@ -4,10 +4,12 @@ class FeaturedCard extends StatelessWidget {
   final Gradient backgroundGradient;
   final String name;
   final String imgUrl;
+  final String price;
   const FeaturedCard({
     Key? key,
     required this.name,
     required this.imgUrl,
+    required this.price,
     this.backgroundGradient =
         const LinearGradient(colors: [Colors.black87, Colors.black54]),
   }) : super(key: key);
@@ -46,20 +48,20 @@ class FeaturedCard extends StatelessWidget {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.more_horiz,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () {},
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.topRight,
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(5.0),
+          //     child: IconButton(
+          //       icon: const Icon(
+          //         Icons.more_horiz,
+          //         color: Colors.white,
+          //         size: 30,
+          //       ),
+          //       onPressed: () {},
+          //     ),
+          //   ),
+          // ),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
@@ -75,8 +77,8 @@ class FeaturedCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
-                  const Text(
-                    '',
+                   Text(
+                    price,
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

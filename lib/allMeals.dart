@@ -5,8 +5,11 @@ import 'package:green_leaf_app/Widgets/foodCard.dart';
 import 'package:green_leaf_app/Widgets/searchInput.dart';
 import 'package:green_leaf_app/cartPage.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
+import 'package:green_leaf_app/controller/favorite.dart';
 import 'package:green_leaf_app/favourites.dart';
+import 'package:green_leaf_app/mealPage.dart';
 import 'package:green_leaf_app/models/foods_model.dart';
+import 'package:lottie/lottie.dart';
 
 class AllMealsPage extends StatefulWidget {
   const AllMealsPage({Key? key}) : super(key: key);
@@ -17,7 +20,7 @@ class AllMealsPage extends StatefulWidget {
 
 class _AllMealsPageState extends State<AllMealsPage> {
   final CartController controller = Get.find();
-
+  final FavoriteController _favoriteController = Get.find();
   // This list holds the data for the list view
   List<Food> foundMeals = [];
 
@@ -79,17 +82,26 @@ class _AllMealsPageState extends State<AllMealsPage> {
                     const SizedBox(
                       width: 10,
                     ),
-                    CircleAvatar(
-                      backgroundColor: Colors.black.withOpacity(0.4),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => FavouritesPage()));
-                        },
-                        icon: Icon(Icons.favorite),
-                        color: Colors.white,
-                      ),
-                    )
+                    Obx(() => Badge(
+                          badgeContent: Text(
+                            '${_favoriteController.foods.length}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.black.withOpacity(0.4),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => FavouritesPage()));
+                              },
+                              icon: Icon(Icons.favorite),
+                              color: Colors.white,
+                            ),
+                          ),
+                        )),
+                    const SizedBox(
+                      width: 5,
+                    ),
                   ],
                 )),
           )
@@ -123,31 +135,63 @@ class _AllMealsPageState extends State<AllMealsPage> {
                     fontWeight: FontWeight.w600,
                     color: Colors.black)),
             Expanded(
-              child: foundMeals.isNotEmpty
-                  ? ListView.separated(
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            FoodCard(
-                              index: index,
-                              description: "${foundMeals[index].description}",
-                              foodname: "${foundMeals[index].foodname}",
-                              price: 'GH₵ ${foundMeals[index].price}',
-                              image: '${foundMeals[index].img}',
-                            )
-                          ],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox();
-                      },
-                      itemCount: foundMeals.length)
-                  : const Text(
-                      'No results found',
-                      style: TextStyle(fontSize: 24),
-                    ),
-            )
+                child: foundMeals.isNotEmpty
+                    ? ListView.separated(
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => MealPage(
+                                          food: controller.foods.keys
+                                              .toList()[index],
+                                          quantity: controller.foods.values
+                                              .toList()[index],
+                                          index: index,
+                                          foodname:
+                                              "${foundMeals[index].foodname}",
+                                          description:
+                                              "${foundMeals[index].description}",
+                                          image: "${foundMeals[index].img}",
+                                          price:
+                                              "${foundMeals[index].price}")));
+                                },
+                                child: FoodCard(
+                                  index: index,
+                                  description:
+                                      "${foundMeals[index].description}",
+                                  foodname: "${foundMeals[index].foodname}",
+                                  price: 'GH₵ ${foundMeals[index].price}',
+                                  image: '${foundMeals[index].img}',
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox();
+                        },
+                        itemCount: foundMeals.length)
+                    : ListView.builder(
+                        itemCount: 1,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              Lottie.asset(
+                                "assets/images/not-found.json",
+                              ),
+                              Text(
+                                "No results found ",
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade300),
+                              )
+                            ],
+                          );
+                        }))
           ],
         ),
       ),

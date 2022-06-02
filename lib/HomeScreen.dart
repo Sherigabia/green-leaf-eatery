@@ -5,8 +5,10 @@ import 'package:green_leaf_app/Widgets/featuredFoodCard.dart';
 import 'package:green_leaf_app/allMeals.dart';
 import 'package:green_leaf_app/cartPage.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
+import 'package:green_leaf_app/controller/favorite.dart';
 import 'package:green_leaf_app/favourites.dart';
 import 'package:green_leaf_app/mealPage.dart';
+import 'package:green_leaf_app/models/foods_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,45 +19,63 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final CartController controller = Get.find();
+  final FavoriteController _favoriteController = Get.find();
 
-  final featuredfood = [
-    {
-      'name': 'Pizza',
-      'img': "assets/images/pizza.jpg",
-      'description': "Peperroni Pizza with extra toppings",
-      'price': "25"
-    },
-    {
-      'name': 'Banku',
-      'img': "assets/images/banku-tilapia.jpeg",
-      'description': "Peperroni Pizza with extra toppings",
-      'price': "25"
-    },
-    {
-      'name': 'Noodles',
-      'img': "assets/images/noodles.jpg",
-      'description': "Peperroni Pizza with extra toppings",
-      'price': "35"
-    },
-    {
-      'name': 'Noodles',
-      'img': "assets/images/noodles.jpg",
-      'description': "Peperroni Pizza with extra toppings",
-      'price': "15"
-    },
-    {
-      'name': 'Noodles',
-      'img': "assets/images/noodles.jpg",
-      'description': "Peperroni Pizza with extra toppings",
-      'price': "10"
-    },
-    {
-      "name": 'Chicken',
-      'img': "assets/images/chicken.jpg",
-      'description': "Peperroni Pizza with extra toppings",
-      'price': "15"
-    },
-  ];
+  List<Food> foundMeals = [];
+
+  @override
+  void initState() {
+    foundMeals = Food.allmeals;
+    super.initState();
+  }
+
+  // This function is called whenever the text field changes
+  void _runFilter(String enteredKeyword) {
+    List<Food> results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = Food.allmeals;
+    } else {
+      results = Food.allmeals
+          .where((food) => food.foodname
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+    // Refresh the UI
+    setState(() {
+      foundMeals = results;
+    });
+  }
+
+  // final featuredfood = [
+  //   {
+  //     'name': 'Pizza',
+  //     'img': "assets/images/pizza.jpg",
+  //     'description': "Peperroni Pizza with extra toppings",
+  //     'price': 25
+  //   },
+  //   {
+  //     'name': 'Banku',
+  //     'img': "assets/images/banku-tilapia.jpeg",
+  //     'description': "Banku with Grilled Tilapia and pepper",
+  //     'price': 25
+  //   },
+  //   {
+  //     'name': 'Noodles',
+  //     'img': "assets/images/noodles.jpg",
+  //     'description': "Spicy noodles with sausages",
+  //     'price': 35
+  //   },
+  //   {
+  //     "name": 'Chicken',
+  //     'img': "assets/images/chicken.jpg",
+  //     'description': "Grilled Chicken",
+  //     'price': 15
+  //   },
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -94,23 +114,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(
                         width: 10,
                       ),
-                      Badge(
-                        badgeContent: Text(
-                          "1",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.black.withOpacity(0.4),
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => FavouritesPage()));
-                            },
-                            icon: Icon(Icons.favorite),
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      Obx(() => Badge(
+                            badgeContent: Text(
+                              '${_favoriteController.foods.length}',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.black.withOpacity(0.4),
+                              child: IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => FavouritesPage()));
+                                },
+                                icon: Icon(Icons.favorite),
+                                color: Colors.white,
+                              ),
+                            ),
+                          )),
                       const SizedBox(
                         width: 5,
                       ),
@@ -305,15 +325,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => MealPage(
-                                      foodname:
-                                          "${featuredfood[index]['name']}",
-                                      description: "",
-                                      image: "${featuredfood[index]['img']}",
-                                      price: "")));
+                                      food:
+                                          controller.foods.keys.toList()[index],
+                                      quantity:  controller.foods.values.toList()[index],
+                                      index: index,
+                                      foodname: "${foundMeals[index].foodname}",
+                                      description:
+                                          "${foundMeals[index].description}",
+                                      image: "${foundMeals[index].img}",
+                                      price: "${foundMeals[index].price}")));
                             },
                             child: FeaturedCard(
-                              name: "${featuredfood[index]['name']}",
-                              imgUrl: "${featuredfood[index]['img']}",
+                              name: "${foundMeals[index].foodname}",
+                              imgUrl: "${foundMeals[index].img}",
+                              price: "GH₵ ${foundMeals[index].price}",
                             ),
                           )
                         ],
@@ -322,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     separatorBuilder: (context, index) {
                       return const SizedBox(height: 10);
                     },
-                    itemCount: featuredfood.length)
+                    itemCount: foundMeals.length)
               ],
             ),
           )

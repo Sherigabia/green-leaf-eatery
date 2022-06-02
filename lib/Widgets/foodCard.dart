@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:green_leaf_app/cartPage.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
+import 'package:green_leaf_app/controller/favorite.dart';
 import 'package:green_leaf_app/favourites.dart';
 import 'package:green_leaf_app/models/foods_model.dart';
 
 class FoodCard extends StatelessWidget {
   final cartController = Get.put(CartController());
+  final _favoriteController = Get.put(FavoriteController());
   final int index;
   String foodname;
   String description;
@@ -89,7 +91,9 @@ class FoodCard extends StatelessWidget {
                         color: Colors.grey,
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _favoriteController.addFood(Food.allmeals[index]);
+                        },
                         tooltip: "add to favourites",
                         icon: Icon(
                           Icons.favorite_outline,
