@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:green_leaf_app/HomeScreen.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
-import 'package:green_leaf_app/controller/favorite.dart';
+import 'package:green_leaf_app/controller/favoriteController.dart';
+import 'package:green_leaf_app/controller/home_controller.dart';
 import 'package:tbib_splash_screen/splash_screen_view.dart';
 
 void main() {
@@ -14,7 +15,7 @@ void main() {
 class HomePage extends StatelessWidget {
   final cartController = Get.put(CartController());
   final favoriteController = Get.put(FavoriteController());
-
+  final homeController = Get.put(HomeController());
   HomePage({Key? key}) : super(key: key);
 
   @override

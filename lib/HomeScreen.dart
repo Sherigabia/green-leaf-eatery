@@ -2,13 +2,16 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:green_leaf_app/Widgets/featuredFoodCard.dart';
+import 'package:green_leaf_app/Widgets/foodCard.dart';
 import 'package:green_leaf_app/allMeals.dart';
 import 'package:green_leaf_app/cartPage.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
-import 'package:green_leaf_app/controller/favorite.dart';
+import 'package:green_leaf_app/controller/controllers.dart';
+import 'package:green_leaf_app/controller/favoriteController.dart';
 import 'package:green_leaf_app/favourites.dart';
 import 'package:green_leaf_app/mealPage.dart';
 import 'package:green_leaf_app/models/foods_model.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,62 +23,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final CartController controller = Get.find();
   final FavoriteController _favoriteController = Get.find();
-
-  List<Food> foundMeals = [];
-
-  @override
-  void initState() {
-    foundMeals = Food.allmeals;
-    super.initState();
-  }
-
-  // This function is called whenever the text field changes
-  void _runFilter(String enteredKeyword) {
-    List<Food> results = [];
-    if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = Food.allmeals;
-    } else {
-      results = Food.allmeals
-          .where((food) => food.foodname
-              .toLowerCase()
-              .contains(enteredKeyword.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-    }
-
-    // Refresh the UI
-    setState(() {
-      foundMeals = results;
-    });
-  }
-
-  // final featuredfood = [
-  //   {
-  //     'name': 'Pizza',
-  //     'img': "assets/images/pizza.jpg",
-  //     'description': "Peperroni Pizza with extra toppings",
-  //     'price': 25
-  //   },
-  //   {
-  //     'name': 'Banku',
-  //     'img': "assets/images/banku-tilapia.jpeg",
-  //     'description': "Banku with Grilled Tilapia and pepper",
-  //     'price': 25
-  //   },
-  //   {
-  //     'name': 'Noodles',
-  //     'img': "assets/images/noodles.jpg",
-  //     'description': "Spicy noodles with sausages",
-  //     'price': 35
-  //   },
-  //   {
-  //     "name": 'Chicken',
-  //     'img': "assets/images/chicken.jpg",
-  //     'description': "Grilled Chicken",
-  //     'price': 15
-  //   },
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -313,46 +260,102 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                ListView.separated(
-                    primary: false,
-                    scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.all(8),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MealPage(
-                                      food:
-                                          controller.foods.keys.toList()[index],
-                                      quantity:  controller.foods.values.toList()[index],
-                                      index: index,
-                                      foodname: "${foundMeals[index].foodname}",
-                                      description:
-                                          "${foundMeals[index].description}",
-                                      image: "${foundMeals[index].img}",
-                                      price: "${foundMeals[index].price}")));
-                            },
-                            child: FeaturedCard(
-                              name: "${foundMeals[index].foodname}",
-                              imgUrl: "${foundMeals[index].img}",
-                              price: "GH₵ ${foundMeals[index].price}",
+                Obx(() {
+                  if (homeController.foodList.isNotEmpty) {
+                    return foodCardView(
+                        controller: controller,
+                        foodList: homeController.foodList);
+                  } else {
+                    return Shimmer.fromColors(
+                      highlightColor: Colors.white,
+                      baseColor: Colors.grey.shade300,
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Container(
+                              color: Colors.grey,
                             ),
-                          )
-                        ],
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(height: 10);
-                    },
-                    itemCount: foundMeals.length)
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                })
               ],
             ),
           )
         ],
       ),
     );
+  }
+}
+
+class foodCardView extends StatefulWidget {
+  final List<Food> foodList;
+  const foodCardView(
+      {Key? key, required this.controller, required this.foodList})
+      : super(key: key);
+
+  final CartController controller;
+
+  @override
+  State<foodCardView> createState() => _foodCardViewState();
+}
+
+class _foodCardViewState extends State<foodCardView> {
+  late List<Widget> _foodList;
+  @override
+  void initState() {
+    _foodList = widget.foodList
+        .map((e) => FoodCard(
+              foodname: e.foodname,
+              imageUrl: e.img,
+              price: e.price,
+              description: e.description,
+            ))
+        .toList();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+        primary: false,
+        scrollDirection: Axis.vertical,
+        padding: EdgeInsets.all(8),
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Obx(() => Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      // widget.controller.addFood(Food.allmeals[index]);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MealPage(
+                                food: homeController.foodList[index],
+                                index: index,
+                              )));
+                    },
+                    child: FeaturedCard(
+                      name: homeController.foodList[index].foodname,
+                      imgUrl: homeController.foodList[index].img,
+                      price: "GH₵ ${homeController.foodList[index].price}",
+                    ),
+                  )
+                ],
+              ));
+        },
+        separatorBuilder: (context, index) {
+          return const SizedBox(height: 10);
+        },
+        itemCount: 2);
   }
 }

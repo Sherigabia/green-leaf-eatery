@@ -1,26 +1,28 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:green_leaf_app/cartPage.dart';
+import 'package:green_leaf_app/const.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
-import 'package:green_leaf_app/controller/favorite.dart';
+import 'package:green_leaf_app/controller/favoriteController.dart';
 import 'package:green_leaf_app/favourites.dart';
 import 'package:green_leaf_app/models/foods_model.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FoodCard extends StatelessWidget {
   final cartController = Get.put(CartController());
   final _favoriteController = Get.put(FavoriteController());
-  final int index;
+
   String foodname;
   String description;
-  String image;
-  String price;
+  String imageUrl;
+  int price;
 
   FoodCard(
       {Key? key,
-      required this.index,
       required this.foodname,
       required this.description,
-      required this.image,
+      required this.imageUrl,
       required this.price})
       : super(key: key);
 
@@ -36,12 +38,37 @@ class FoodCard extends StatelessWidget {
               Container(
                 width: 100.0,
                 height: 100.0,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(image), fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(8.0)),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Shimmer.fromColors(
+                      highlightColor: Colors.white,
+                      baseColor: Colors.grey.shade300,
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          child: AspectRatio(
+                            aspectRatio: 16 / 9,
+                            child: Container(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                ),
               ),
-              SizedBox(width: 20.0),
               Expanded(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -74,7 +101,7 @@ class FoodCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        price,
+                        'GH₵ $price',
                         style: const TextStyle(
                           fontSize: 16.0,
                           color: Colors.black,
@@ -84,7 +111,7 @@ class FoodCard extends StatelessWidget {
                       IconButton(
                         onPressed: () {
 /* fix cart feature bug here*/
-                          cartController.addFood(Food.allmeals[index]);
+                          // cartController.addFood(Food.allmeals[index]);
                         },
                         tooltip: "add to cart",
                         icon: Icon(Icons.shopping_cart_outlined),
@@ -92,7 +119,7 @@ class FoodCard extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          _favoriteController.addFood(Food.allmeals[index]);
+                          // _favoriteController.addFood(Food.allmeals[index]);
                         },
                         tooltip: "add to favourites",
                         icon: Icon(

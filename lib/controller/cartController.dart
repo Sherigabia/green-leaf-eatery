@@ -22,17 +22,20 @@ class CartController extends GetxController {
   }
 
   void removeFood(Food food) {
-    if (_foods.containsKey(food) && _foods[food] == 1) {
-      _foods.removeWhere((key, value) => key == food);
-    } else {
-      _foods[food] -= 1;
+    
+      if (_foods.containsKey(food) && _foods[food] == 1) {
+        _foods.removeWhere((key, value) => key == food);
+      } else {
+        _foods[food] -= 1;
+      }
+      Get.snackbar(
+          "Food Removed", "You have removed ${food.foodname} from Cart",
+          snackPosition: SnackPosition.BOTTOM,
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          duration: Duration(seconds: 2));
     }
-    Get.snackbar("Food Removed", "You have removed ${food.foodname} from Cart",
-        snackPosition: SnackPosition.BOTTOM,
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        duration: Duration(seconds: 2));
-  }
+  
 
   get foods => _foods;
 

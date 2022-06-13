@@ -2,8 +2,9 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:green_leaf_app/cartPage.dart';
+import 'package:green_leaf_app/const.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
-import 'package:green_leaf_app/controller/favorite.dart';
+import 'package:green_leaf_app/controller/favoriteController.dart';
 import 'package:green_leaf_app/favourites.dart';
 import 'package:green_leaf_app/models/foods_model.dart';
 
@@ -12,24 +13,14 @@ class MealPage extends StatelessWidget {
 
   final _favoriteController = Get.put(FavoriteController());
   final int index;
-  String foodname;
-  String description;
-  String image;
-  String price;
 
   final Food food;
-  final int quantity;
 
-  MealPage(
-      {Key? key,
-      required this.food,
-      required this.quantity,
-      required this.index,
-      required this.foodname,
-      required this.description,
-      required this.image,
-      required this.price})
-      : super(key: key);
+  MealPage({
+    Key? key,
+    required this.food,
+    required this.index,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +111,7 @@ class MealPage extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage(food.img),
+                        image: NetworkImage("${food.img}"),
                         colorFilter: ColorFilter.mode(
                             Colors.black.withOpacity(0.2), BlendMode.darken),
                         fit: BoxFit.cover)),
@@ -140,7 +131,7 @@ class MealPage extends StatelessWidget {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.amber)),
                         onPressed: () {
-                          _favoriteController.addFood(Food.allmeals[index]);
+                          _favoriteController.addFood(food);
                         },
                         child: Row(
                           children: [
@@ -164,7 +155,7 @@ class MealPage extends StatelessWidget {
                                 Colors.blueGrey.shade900)),
                         onPressed: () {
                           // Error in here
-                          cartController.addFood(Food.allmeals[index]);
+                          cartController.addFood(food);
                         },
                         child: Row(
                           children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:green_leaf_app/const.dart';
 
 class FeaturedCard extends StatelessWidget {
   final Gradient backgroundGradient;
@@ -26,7 +27,7 @@ class FeaturedCard extends StatelessWidget {
             fit: BoxFit.fitWidth,
             colorFilter:
                 const ColorFilter.mode(Colors.black12, BlendMode.darken),
-            image: AssetImage(imgUrl)),
+            image: NetworkImage('$imgUrl')),
       ),
       child: Stack(
         children: [
@@ -71,13 +72,25 @@ class FeaturedCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "View $name",
+                    "$name",
                     style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
-                   Text(
+                ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
                     price,
                     style: TextStyle(
                         fontSize: 18,

@@ -5,7 +5,8 @@ import 'package:green_leaf_app/Widgets/foodCard.dart';
 import 'package:green_leaf_app/Widgets/searchInput.dart';
 import 'package:green_leaf_app/cartPage.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
-import 'package:green_leaf_app/controller/favorite.dart';
+import 'package:green_leaf_app/controller/controllers.dart';
+import 'package:green_leaf_app/controller/favoriteController.dart';
 import 'package:green_leaf_app/favourites.dart';
 import 'package:green_leaf_app/mealPage.dart';
 import 'package:green_leaf_app/models/foods_model.dart';
@@ -26,7 +27,7 @@ class _AllMealsPageState extends State<AllMealsPage> {
 
   @override
   void initState() {
-    foundMeals = Food.allmeals;
+    foundMeals = homeController.foodList;
     super.initState();
   }
 
@@ -35,9 +36,9 @@ class _AllMealsPageState extends State<AllMealsPage> {
     List<Food> results = [];
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
-      results = Food.allmeals;
+      results = homeController.foodList;
     } else {
-      results = Food.allmeals
+      results = homeController.foodList
           .where((food) => food.foodname
               .toLowerCase()
               .contains(enteredKeyword.toLowerCase()))
@@ -143,28 +144,20 @@ class _AllMealsPageState extends State<AllMealsPage> {
                             children: [
                               InkWell(
                                 onTap: () {
+                                  controller.addFood(foundMeals[index]);
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => MealPage(
-                                          food: controller.foods.keys
-                                              .toList()[index],
-                                          quantity: controller.foods.values
-                                              .toList()[index],
-                                          index: index,
-                                          foodname:
-                                              "${foundMeals[index].foodname}",
-                                          description:
-                                              "${foundMeals[index].description}",
-                                          image: "${foundMeals[index].img}",
-                                          price:
-                                              "${foundMeals[index].price}")));
+                                            food: foundMeals[index],
+                                            index: index,
+                                          )));
                                 },
                                 child: FoodCard(
-                                  index: index,
+                                  
                                   description:
                                       "${foundMeals[index].description}",
                                   foodname: "${foundMeals[index].foodname}",
-                                  price: 'GH₵ ${foundMeals[index].price}',
-                                  image: '${foundMeals[index].img}',
+                                  price: foundMeals[index].price,
+                                  imageUrl: '${foundMeals[index].img}',
                                 ),
                               )
                             ],
