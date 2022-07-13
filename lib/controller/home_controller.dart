@@ -15,7 +15,7 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
-  void getFoods() async {
+  Future getFoods() async {
     try {
       isFoodLoading(true);
       var result = await RemoteFoodService().get();

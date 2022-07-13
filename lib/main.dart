@@ -6,7 +6,6 @@ import 'package:green_leaf_app/HomeScreen.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
 import 'package:green_leaf_app/controller/favoriteController.dart';
 import 'package:green_leaf_app/controller/home_controller.dart';
-import 'package:tbib_splash_screen/splash_screen_view.dart';
 
 void main() {
   runApp(HomePage());
@@ -57,12 +56,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Stack(
           children: [
-            Container(
+            SizedBox(
               height: double.infinity,
               width: double.infinity,
               child: Image.asset(

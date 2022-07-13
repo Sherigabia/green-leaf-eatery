@@ -1,5 +1,4 @@
 import 'package:green_leaf_app/const.dart';
-import 'package:green_leaf_app/models/foods_model.dart';
 import 'package:http/http.dart' as http;
 
 class RemoteFoodService {
@@ -7,7 +6,11 @@ class RemoteFoodService {
   var remoteUrl = '$baseUrl/api/meals';
 
   Future<dynamic> get() async {
-    var response = await client.get(Uri.parse('$remoteUrl?populate=*'));
-    return response;
+    try {
+      var response = await client.get(Uri.parse('$remoteUrl?populate=*'));
+      return response;
+    } catch (e) {
+      return "Error connecting to Server";
+    }
   }
 }

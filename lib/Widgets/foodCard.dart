@@ -1,12 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:green_leaf_app/cartPage.dart';
-import 'package:green_leaf_app/const.dart';
 import 'package:green_leaf_app/controller/cartController.dart';
 import 'package:green_leaf_app/controller/favoriteController.dart';
-import 'package:green_leaf_app/favourites.dart';
-import 'package:green_leaf_app/models/foods_model.dart';
 import 'package:shimmer/shimmer.dart';
 
 class FoodCard extends StatelessWidget {
@@ -35,7 +31,7 @@ class FoodCard extends StatelessWidget {
         child: Center(
           child: Row(
             children: [
-              Container(
+              SizedBox(
                 width: 100.0,
                 height: 100.0,
                 child: ClipRRect(
@@ -47,7 +43,7 @@ class FoodCard extends StatelessWidget {
                       highlightColor: Colors.white,
                       baseColor: Colors.grey.shade300,
                       child: Container(
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         decoration: const BoxDecoration(
                             color: Colors.grey,
                             borderRadius:
@@ -69,6 +65,9 @@ class FoodCard extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(
+                width: 15,
+              ),
               Expanded(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -77,56 +76,56 @@ class FoodCard extends StatelessWidget {
                   Text(
                     foodname,
                     style: TextStyle(
-                        color: Colors.grey[800],
+                        color: Colors.grey[600],
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(
-                    height: 5.0,
+                    height: 10.0,
                   ),
                   Text(
                     description,
                     style: TextStyle(
-                      color: Colors.grey[600],
+                      color: Colors.grey[800],
                       fontSize: 16.0,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 10.0,
                   ),
                   Row(
                     children: [
                       Text(
                         'GH₵ $price',
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.black,
-                        ),
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[600]),
                       ),
-                      Spacer(),
-                      IconButton(
-                        onPressed: () {
-/* fix cart feature bug here*/
-                          // cartController.addFood(Food.allmeals[index]);
-                        },
-                        tooltip: "add to cart",
-                        icon: Icon(Icons.shopping_cart_outlined),
-                        color: Colors.grey,
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          // _favoriteController.addFood(Food.allmeals[index]);
-                        },
-                        tooltip: "add to favourites",
-                        icon: Icon(
-                          Icons.favorite_outline,
-                        ),
-                        color: Colors.grey,
-                      ),
+//                       Spacer(),
+//                       IconButton(
+//                         onPressed: () {
+// /* fix cart feature bug here*/
+//                           // cartController.addFood(Food.allmeals[index]);
+//                         },
+//                         tooltip: "add to cart",
+//                         icon: Icon(Icons.shopping_cart_outlined),
+//                         color: Colors.grey,
+//                       ),
+//                       IconButton(
+//                         onPressed: () {
+//                           // _favoriteController.addFood(Food.allmeals[index]);
+//                         },
+//                         tooltip: "add to favourites",
+//                         icon: Icon(
+//                           Icons.favorite_outline,
+//                         ),
+//                         color: Colors.grey,
+//                       ),
                     ],
                   ),
                 ],

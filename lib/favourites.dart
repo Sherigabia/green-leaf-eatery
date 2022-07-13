@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:green_leaf_app/cartPage.dart';
+import 'package:green_leaf_app/Widgets/favoriteFoods.dart';
 
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({Key? key}) : super(key: key);
@@ -15,6 +15,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         title: const Text("Favourites"),
+      ),
+      body: ListView(
+        children: [FavoriteFoods()],
       ),
     );
   }

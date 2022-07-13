@@ -1,29 +1,30 @@
 import 'dart:convert';
 
 List<Food> foodListFromJson(String val) => List<Food>.from(
-  json.decode(val)['data'].map((food) =>Food.fromJson(food))
-);
-
-
+    json.decode(val)['data'].map((food) => Food.fromJson(food)));
+ 
 class Food {
   final int id;
   final String foodname;
   final String img;
   final String description;
   final int price;
+   int quantity;
   Food(
       {required this.id,
       required this.foodname,
       required this.img,
       required this.description,
-      required this.price});
+      required this.price,
+      required this.quantity});
 
   factory Food.fromJson(Map<String, dynamic> data) => Food(
       id: data['id'],
       foodname: data['attributes']['foodname'],
       img: data['attributes']['image']['data']['attributes']['url'],
       description: data['attributes']['description'],
-      price: data['attributes']['price']);
+      price: data['attributes']['price'],
+      quantity: data['attributes']['quantity']);
 
   // static List<Food> allmeals = [
   //   Food(

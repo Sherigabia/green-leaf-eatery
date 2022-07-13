@@ -4,7 +4,7 @@ import 'package:green_leaf_app/models/foods_model.dart';
 
 class FavoriteController extends GetxController{
     // Dictionary to store the products
-  var _foods = {}.obs;
+  final _foods = {}.obs;
 
   
   // add Food function
@@ -19,7 +19,7 @@ class FavoriteController extends GetxController{
         isDismissible: true,
         dismissDirection: DismissDirection.horizontal,
         snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 2));
+        duration: const Duration(seconds: 2));
   }
 
   void removeFood(Food food) {
@@ -32,7 +32,7 @@ class FavoriteController extends GetxController{
         snackPosition: SnackPosition.BOTTOM,
         isDismissible: true,
         dismissDirection: DismissDirection.horizontal,
-        duration: Duration(seconds: 2));
+        duration: const Duration(seconds: 2));
   }
 
   get foods => _foods;
